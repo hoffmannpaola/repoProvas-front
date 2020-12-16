@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 
 import Home from "./pages/Home";
+import ConsultarProva from "./pages/ConsultarProva";
+import UploadProva from "./pages/UploadProva";
+
 
 
 export default function App() {
@@ -11,6 +14,8 @@ export default function App() {
       <GlobalStyle />
       <Router>
         <Switch>
+          <Route path="/postar" exact component={UploadProva} />
+          <Route path="/buscar" exact component={ConsultarProva} />
           <Route path="/" exact component={Home} />
         </Switch>
       </Router>

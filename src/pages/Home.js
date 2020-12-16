@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components"
-// import axios from "axios";
+import React from "react";
+import styled from "styled-components";
+import { useHistory } from "react-router-dom";;
+
 
 export default function Home() {
+
+    const history = useHistory();
 
     return (
         <ContainerBox>
             <h1>RepoProvas</h1>
 
             <div className="options">
-                <div>Consultar Prova</div>
-                <div>Upload de Prova</div>
+                <div onClick = { () => history.push(`/buscar`) }>Consultar Prova</div>
+                <div onClick = { () => history.push(`/postar`) }>Upload de Prova</div>
             </div>
 
         </ContainerBox>
