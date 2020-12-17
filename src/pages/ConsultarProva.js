@@ -1,26 +1,87 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 
 import Header from "../components/Header";
 
 export default function ConsultarProva() {
     
-    const [ option, setOption ] = useState(false)
-    const [ teste, setteste ] = useState(true)
+    getTeachers();
+    getDisciplines();
 
-    const listOptions = [
-        { id: 1, name: "Calculo I" },
-        { id: 2, name: "Calculo II" },
-        { id: 3, name: "Matemática Aplicada" },
-        { id: 4, name: "Otimização de Sistemas Lineares" },
-      ];
+    const [ option, setOption ] = useState(false);
+    const [ discipline, setDiscipline ] = useState(listDisciplines[0]);
+    const [ teacher, setTeacher ] = useState(listTeachers[0]);
+    const [listTeachers, setListTeachers] = useState('');
+    const [listDisciplines, setListDisciplines] = useState('');
+    const [buttonEnabled, setButtonEnabled] = useState(true);
 
-      const listDisc = [
-        { id: 1, name: "Prof. Fabinho" },
-        { id: 2, name: "Prof. Bruno" },
-        { id: 3, name: "Prof. Samuel" },
-        { id: 4, name: "Prof. Ana Cristina" },
-      ];
+    function getTeachers () {
+        const request = axios.get(`http://localhost:3000/api/professores`);
+    
+        request.then(({data}) => {
+            setListTeachers(data); 
+        });
+         request.catch( () => {
+             alert("Não foi possivel buscar os professores!")
+    
+        });
+
+    }
+
+    function getDisciplines() {
+        const request = axios.get(`http://localhost:3000/api/disciplinas`);
+    
+        request.then(({data}) => {
+            setListDisciplines(data); 
+        });
+         request.catch( () => {
+             alert("Não foi possivel buscar as disciplinas!")
+    
+        });
+
+    }
+
+    function sendChoicesToDatabase(choice) {
+
+        setButtonEnabled(false);
+        const formatting = choice.split(' ');
+        let route;
+
+        formatting.forEach(element => {
+            route += element;
+            
+        });
+
+        const request = axios.post(`http://localhost:3000/`, {}, {choice});
+    
+        request.then(({data}) => {
+            history.push(`/disciplina/${route}`)
+        });
+         request.catch( () => {
+             alert("Não foi possivel realizar esta busca!");
+             setButtonEnabled(true);
+    
+        });
+
+    }
+
+
+    // const listOptions = [
+    //     { id: "Calculo I", name: "Calculo I" },
+    //     { id: "Calculo II", name: "Calculo II" },
+    //     { id: "Matemática Aplicada", name: "Matemática Aplicada" },
+    //     { id: "Otimização de Sistemas Lineares" , name: "Otimização de Sistemas Lineares" },
+    //   ];
+
+    //   const listDisc = [
+    //     { id: "Prof. Fabinho", name: "Prof. Fabinho" },
+    //     { id: "Prof. Bruno", name: "Prof. Bruno" },
+    //     { id: "Prof. Samuel" , name: "Prof. Samuel" },
+    //     { id: "Prof. Ana Cristina", name: "Prof. Ana Cristina" },
+    //   ];
+
+     
 
     return (
         <>
@@ -40,29 +101,34 @@ export default function ConsultarProva() {
                    
                     <div>
                     {(option === "disciplina") 
-                        ? <><select className="select">
-                        {listOptions.map((item) => (
+                        ? <>
+                        <select className="select"
+                         onChange={(e) => setDiscipline(e.target.value)}>
+                        {listDisciplines.map((item) => (
                             <option key={item.id} value={item.id}>
                             {item.name}
                             </option>
                         ))}
                         </select>
                         <div className="botao"> 
-                            <button>Buscar</button>
+                            <button onClick={() => sendChoicesToDatabase(discipline)}>
+                                {(buttonEnabled) ? Buscar : Buscando }</button>
                         </div> </>
                         : " "
                     }
 
                     {(option === "professor") 
-                        ? <><select className="select">
-                        {listDisc.map((item) => (
+                        ? <>
+                        <select className="select"
+                         onChange={(e) => setTeacher(e.target.value)}>
+                        {listTeachers.map((item) => (
                             <option key={item.id} value={item.id}>
                             {item.name}
                             </option>
                         ))}
                         </select>
                         <div className="botao"> 
-                            <button>Buscar</button>
+                            <button onClick={() => sendChoicesToDatabase(teacher)}>{(buttonEnabled) ? Buscar : Buscando }</button>
                         </div> </>
                         : " "
                     }
