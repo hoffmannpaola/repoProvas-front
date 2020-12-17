@@ -5,6 +5,8 @@ import { createGlobalStyle } from "styled-components";
 import Home from "./pages/Home";
 import ConsultarProva from "./pages/ConsultarProva";
 import UploadProva from "./pages/UploadProva";
+import Disciplina from "./pages/Disciplina";
+import Professor from "./pages/Professor";
 
 
 
@@ -14,6 +16,8 @@ export default function App() {
       <GlobalStyle />
       <Router>
         <Switch>
+          <Route path="/professor/:id" exact component={Professor} />
+          <Route path="/disciplina/:id" exact component={Disciplina} />
           <Route path="/postar" exact component={UploadProva} />
           <Route path="/buscar" exact component={ConsultarProva} />
           <Route path="/" exact component={Home} />
