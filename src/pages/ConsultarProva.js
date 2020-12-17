@@ -1,87 +1,129 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 import Header from "../components/Header";
 
 export default function ConsultarProva() {
-    
-    getTeachers();
-    getSubjects();
+
+    const history = useHistory();
 
     const [ option, setOption ] = useState(false);
-    const [ subject, setSubject ] = useState(listSubjects[0]);
-    const [ teacher, setTeacher ] = useState(listTeachers[0]);
-    const [listTeachers, setListTeachers] = useState('');
-    const [listSubjects, setListSubjects] = useState('');
-    const [buttonEnabled, setButtonEnabled] = useState(true);
+    
+    const [ buttonEnabled, setButtonEnabled ] = useState(true);
+    const [ listTeachers, setListTeachers ] = useState([]);
+    const [ listSubjects, setListSubjects ] = useState([]);
+    const [ subject, setSubject ] = useState('');
+    const [ teacher, setTeacher ] = useState('');
 
-    function getTeachers () {
-        const request = axios.get(`http://localhost:3000/api/professores`);
+    useEffect(() => {
+        const request = axios.get(`http://localhost:3000/api/disciplinas/get-subjects`);
+    
+        request.then(({data}) => {
+            setListSubjects(data);
+            setSubject(data[0].nome)
+        });
+         request.catch( () => {
+             alert("Não foi possivel buscar as disciplinas!")
+    
+        });
+   
+    }, []);
+
+    useEffect(() => {
+        const request = axios.get(`http://localhost:3000/api/professores/get-teacher`);
     
         request.then(({data}) => {
             setListTeachers(data); 
+            setTeacher(data[0].nome);
         });
          request.catch( () => {
              alert("Não foi possivel buscar os professores!")
     
         });
 
-    }
+   
+    }, []);
 
-    function getSubjects() {
-        const request = axios.get(`http://localhost:3000/api/disciplinas`);
-    
-        request.then(({data}) => {
-            setListSubjects(data); 
-        });
-         request.catch( () => {
-             alert("Não foi possivel buscar as disciplinas!")
-    
-        });
-
-    }
-
-    function sendChoicesToDatabase(choice) {
-
-        setButtonEnabled(false);
-        const formatting = choice.split(' ');
-        let route;
+    function killingBlanks(name) {
+        const formatting = name.split(' ');
+        let formatted = '';
 
         formatting.forEach(element => {
-            route += element;
-            
+            formatted += element;
         });
 
-        const request = axios.post(`http://localhost:3000/`, {}, {choice});
+        
+        console.log(formatted);
+        return formatted;
+        
+    }
+
+    function removeAccent (text) {       
+        text = text.toLowerCase();                                                         
+        text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
+        text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
+        text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
+        text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
+        text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
+        text = text.replace(new RegExp('[Ç]','gi'), 'c');
+
+        return text;                 
+    }
+  
+    
+    function fromIdToName(choice) {
+
+        let toSearch;
+        
+
+         (option === "disciplina") 
+        ? listSubjects.find((s) => {
+            if (s.id === parseInt(choice)) {
+                setSubject(s.nome);
+                toSearch = killingBlanks(s.nome);
+            } 
+        })
+        : listTeachers.find((s) => {
+            if (s.id === parseInt(choice)) {
+                setTeacher(s.nome);
+                toSearch = killingBlanks(s.nome);
+            } 
+
+        })
+        
+        sendChoicesToDatabase(toSearch);
+    }
+
+  
+   
+
+    function sendChoicesToDatabase(toSearch) {
+
+        setButtonEnabled(false);
+
+                
+        toSearch = removeAccent(toSearch);
+
+
+        const request = axios.post(`http://localhost:3000/`, {}, {toSearch});
     
         request.then(({data}) => {
-            history.push(`/disciplina/${route}`)
+            history.push(`/disciplina/${toSearch}`)
         });
-         request.catch( () => {
+
+        request.catch( () => {
              alert("Não foi possivel realizar esta busca!");
              setButtonEnabled(true);
     
-        });
+        }); 
 
     }
 
 
-    // const listOptions = [
-    //     { id: "Calculo I", name: "Calculo I" },
-    //     { id: "Calculo II", name: "Calculo II" },
-    //     { id: "Matemática Aplicada", name: "Matemática Aplicada" },
-    //     { id: "Otimização de Sistemas Lineares" , name: "Otimização de Sistemas Lineares" },
-    //   ];
 
-    //   const listDisc = [
-    //     { id: "Prof. Fabinho", name: "Prof. Fabinho" },
-    //     { id: "Prof. Bruno", name: "Prof. Bruno" },
-    //     { id: "Prof. Samuel" , name: "Prof. Samuel" },
-    //     { id: "Prof. Ana Cristina", name: "Prof. Ana Cristina" },
-    //   ];
-
-     
+    
 
     return (
         <>
@@ -106,13 +148,13 @@ export default function ConsultarProva() {
                          onChange={(e) => setSubject(e.target.value)}>
                         {listSubjects.map((item) => (
                             <option key={item.id} value={item.id}>
-                            {item.name}
+                            {item.nome}
                             </option>
                         ))}
                         </select>
                         <div className="botao"> 
-                            <button onClick={() => sendChoicesToDatabase(subject)}>
-                                {(buttonEnabled) ? Buscar : Buscando }</button>
+                            <button onClick={() => fromIdToName(subject)}>
+                                {(buttonEnabled) ? 'Buscar' : 'Buscando' }</button>
                         </div> </>
                         : " "
                     }
@@ -123,12 +165,12 @@ export default function ConsultarProva() {
                          onChange={(e) => setTeacher(e.target.value)}>
                         {listTeachers.map((item) => (
                             <option key={item.id} value={item.id}>
-                            {item.name}
+                            {item.nome}
                             </option>
                         ))}
                         </select>
                         <div className="botao"> 
-                            <button onClick={() => sendChoicesToDatabase(teacher)}>{(buttonEnabled) ? Buscar : Buscando }</button>
+                            <button onClick={() => fromIdToName(teacher)}>{(buttonEnabled) ? 'Buscar' : 'Buscando' }</button>
                         </div> </>
                         : " "
                     }
