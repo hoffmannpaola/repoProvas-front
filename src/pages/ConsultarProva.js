@@ -7,13 +7,13 @@ import Header from "../components/Header";
 export default function ConsultarProva() {
     
     getTeachers();
-    getDisciplines();
+    getSubjects();
 
     const [ option, setOption ] = useState(false);
-    const [ discipline, setDiscipline ] = useState(listDisciplines[0]);
+    const [ subject, setSubject ] = useState(listSubjects[0]);
     const [ teacher, setTeacher ] = useState(listTeachers[0]);
     const [listTeachers, setListTeachers] = useState('');
-    const [listDisciplines, setListDisciplines] = useState('');
+    const [listSubjects, setListSubjects] = useState('');
     const [buttonEnabled, setButtonEnabled] = useState(true);
 
     function getTeachers () {
@@ -29,11 +29,11 @@ export default function ConsultarProva() {
 
     }
 
-    function getDisciplines() {
+    function getSubjects() {
         const request = axios.get(`http://localhost:3000/api/disciplinas`);
     
         request.then(({data}) => {
-            setListDisciplines(data); 
+            setListSubjects(data); 
         });
          request.catch( () => {
              alert("Não foi possivel buscar as disciplinas!")
@@ -103,15 +103,15 @@ export default function ConsultarProva() {
                     {(option === "disciplina") 
                         ? <>
                         <select className="select"
-                         onChange={(e) => setDiscipline(e.target.value)}>
-                        {listDisciplines.map((item) => (
+                         onChange={(e) => setSubject(e.target.value)}>
+                        {listSubjects.map((item) => (
                             <option key={item.id} value={item.id}>
                             {item.name}
                             </option>
                         ))}
                         </select>
                         <div className="botao"> 
-                            <button onClick={() => sendChoicesToDatabase(discipline)}>
+                            <button onClick={() => sendChoicesToDatabase(subject)}>
                                 {(buttonEnabled) ? Buscar : Buscando }</button>
                         </div> </>
                         : " "
