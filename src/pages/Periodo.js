@@ -61,46 +61,7 @@ export default function Periodo() {
         <Header />
         <ContainerBox>
 
-            {(sub)
-            ? (sub.map((p) => { 
-                <li>{p.nome}</li> }))
-            : ''
-
-            }
-
-            
-
-            {/* {(p2)
-                ?
-                :
-            }
-
-            {(sub)
-                ?
-                :
-            }
-
-            {(p3)
-                ?
-                :
-            }
-
-            {(pf)
-                ?
-                :
-            }
-
-            {(segCham)
-                ?
-                :
-            }
-
-            {(outras)
-                ?
-                :
-            }        */}
-
-
+        
 
 
 
