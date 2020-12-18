@@ -15,7 +15,7 @@ export default function Periodo() {
     
     const { provas, setProvas, periodos, setPeriodos, } = useContext(examsContext);
     const [ categorias, setCategorias ] = useState('');
-    console.log(provas)
+    
 
     useEffect(() => {
         const request = axios.get(`${process.env.REACT_APP_BACKURL}/api/categorias/all-categories`);
