@@ -47,9 +47,6 @@ export default function ConsultarProva() {
    
     }, []);
 
-    
-  
-    
     function fromIdToName(choice) {
 
         let toSearch;
