@@ -63,6 +63,7 @@ export default function ConsultarProva() {
                 history.push({
                   pathname: `/disciplina/${toSearch}`,
                   state: s.nome,
+                  id: s.id
                  
                 })
             } 

@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 
+import ExamsProvider from "./contexts/ExamsContext";
 import Home from "./pages/Home";
 import ConsultarProva from "./pages/ConsultarProva";
 import UploadProva from "./pages/UploadProva";
@@ -13,7 +14,7 @@ import Periodo from "./pages/Periodo";
 
 export default function App() {
   return (
-    <>
+    <ExamsProvider>
       <GlobalStyle />
       <Router>
         <Switch>
@@ -25,7 +26,7 @@ export default function App() {
           <Route path="/" exact component={Home} />
         </Switch>
       </Router>
-    </>
+    </ExamsProvider>
   );
 }
 

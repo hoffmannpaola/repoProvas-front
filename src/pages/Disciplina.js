@@ -1,31 +1,70 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {useParams} from 'react-router-dom'
-import { useHistory, useLocation  } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 
 import Header from "../components/Header";
 import { killingBlanks } from '../utils/routeFormatting';
+import { examsContext } from "../contexts/ExamsContext";
 
 
 export default function Disciplina(props) {
+
+    const { periodos, setPeriodos,
+            provas, setProvas
+          } = useContext(examsContext);
+    
     const subject = props.location.state;
-    const {id} = useParams();
-    console.log(id)
+    const idSubject = props.location.id;
 
     const history = useHistory();
 
-    const periodos = [
-        {id: 1, nome: "1º Semestre"},
-        {id: 2, nome: "2º Semestre"},
-        {id: 3, nome: "Eletivas"}
-    ]
+    useEffect(() => {
 
-    const provas = [
-        
-        {id: 5, periodo_id: 1 },
-        {id: 6, periodo_id: 3 },
+        if (subject.length !== 0) {
 
-    ]
+           
+            const request = axios.post(`http://localhost:3000/api/provas/exams-by-name`, {"id": idSubject});
+            
+    
+            request.then(({data}) => {
+                setProvas(data)
+                
+            });
+    
+            request.catch( () => {
+                    alert("Não foi possivel realizar esta busca!");
+                   
+    
+            }); 
+
+        }
+    },[])
+
+  
+    useEffect(() => {
+
+        if (subject.length !== 0) {
+
+           
+            const request = axios.get(`http://localhost:3000/api/periodos/all-periods`);
+            
+    
+            request.then(({data}) => {
+                setPeriodos(data)
+                
+            });
+    
+            request.catch( () => {
+                    alert("Não foi possivel realizar esta busca!");
+                    
+    
+            }); 
+
+        }
+    },[])
+   
 
     const listPeriodos = [];
 
@@ -33,9 +72,11 @@ export default function Disciplina(props) {
 
     for (let i = 0; i < periodos.length; i++) {
 
-        const newArray = provas.some(prova => periodos[i].id === prova.periodo_id);
+        if(provas.length !== 0) {
+            const newArray = provas.some(prova => periodos[i].id === prova.periodo_id);
         (newArray) && listPeriodos.push(periodos[i].nome);
-        
+
+        }
 
     }
     
@@ -45,18 +86,10 @@ export default function Disciplina(props) {
         history.push(`/periodo/${newItem}`)
 
     }
+
+   
     
-    // const request = axios.post(`http://localhost:3000/`, {}, {subject});
-
-    // request.then(({data}) => {
-        
-    // });
-
-    // request.catch( () => {
-    //         alert("Não foi possivel realizar esta busca!");
-    //         setButtonEnabled(true);
-
-    // }); 
+    
     
 
     return (
@@ -67,7 +100,7 @@ export default function Disciplina(props) {
             
             {listPeriodos.map((item) => (
                 <div
-                    onClick={ changePage(item) }
+                    onClick={ () => changePage(item) }
                     className="periodo" 
                     key={item} 
                     value={item}>
@@ -95,6 +128,7 @@ const ContainerBox = styled.div `
     h1 {
       font-size: 3rem; 
       margin-bottom: 1rem;
+      letter-spacing: 0.3rem;
     }
     .periodo {
         display: flex;

@@ -1,15 +1,46 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
+import {useParams} from 'react-router-dom'
 
 import Header from "../components/Header";
+import { examsContext } from "../contexts/ExamsContext";
 
 
 
 export default function Periodo() {
 
-    //buscar provas por periodo e separar por categoria
+    const typeCategoria = useParams();
+    
+    const { provas, setProvas, periodos, setPeriodos, } = useContext(examsContext);
+    console.log(provas)
 
+    const categorias = [
+        {id: 1 , nome: "P1" },
+        {id: 2, nome: "P2" },
+        {id: 3, nome: "Substitutiva" },
+    ]
+
+
+    // let provas1 = [];
+    // let provas2 = [];
+    // let substitutiva = [];
+    // //dividir as provas por categoria
+
+    // for (let i = 0; i < provas.length; i++) {
+
+    //     for (let j = 0; j < categorias.length; j++) {
+    
+    //         if (provas[i].categoria.id === categorias[j].id ) {
+
+    //         }
+     
+    //     }
+    
+    // }
+
+
+  
     return (
         <>
         <Header />
