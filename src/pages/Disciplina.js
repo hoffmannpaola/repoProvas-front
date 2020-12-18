@@ -25,7 +25,7 @@ export default function Disciplina(props) {
         if (subject.length !== 0) {
 
            
-            const request = axios.post(`http://localhost:3000/api/provas/exams-by-name`, {"id": idSubject});
+            const request = axios.post(`${process.env.REACT_APP_BACKURL}/api/provas/exams-by-name`, {"id": idSubject});
             
     
             request.then(({data}) => {
@@ -48,7 +48,7 @@ export default function Disciplina(props) {
         if (subject.length !== 0) {
 
            
-            const request = axios.get(`http://localhost:3000/api/periodos/all-periods`);
+            const request = axios.get(`${process.env.REACT_APP_BACKURL}/api/periodos/all-periods`);
             
     
             request.then(({data}) => {

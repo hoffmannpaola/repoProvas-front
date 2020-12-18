@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import axios from 'axios';
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import {useParams} from 'react-router-dom'
@@ -13,31 +14,45 @@ export default function Periodo() {
     const typeCategoria = useParams();
     
     const { provas, setProvas, periodos, setPeriodos, } = useContext(examsContext);
+    const [ categorias, setCategorias ] = useState('');
     console.log(provas)
 
-    const categorias = [
-        {id: 1 , nome: "P1" },
-        {id: 2, nome: "P2" },
-        {id: 3, nome: "Substitutiva" },
+    useEffect(() => {
+        const request = axios.get(`${process.env.REACT_APP_BACKURL}/api/categorias/all-categories`);
+            
+    
+        request.then(({data}) => {
+            setCategorias(data);
+              
+        });
+
+        request.catch( () => {
+                alert("Não foi possivel realizar esta busca!");
+ 
+        }); 
+
+    }, [])
+
+    const disc = [
+        {id:1, nome: "P1"},
+        {id:2, nome: "P2"},
+        {id:3, nome: "Substitutiva"},
+        {id:4, nome: "P3"},
+        {id:5, nome: "PF"},
+        {id:6, nome: "2ch"},
+        {id:7, nome: "Outras"},
     ]
 
 
-    // let provas1 = [];
-    // let provas2 = [];
-    // let substitutiva = [];
-    // //dividir as provas por categoria
+    const p1 = provas.filter(p => p.categoria_id === 1);
+    const p2 = provas.filter(p => p.categoria_id === 2);
+    const sub = provas.filter(p => p.categoria_id === 3);
+    const p3 = provas.filter(p => p.categoria_id === 4);
+    const pf = provas.filter(p => p.categoria_id === 5);
+    const segCham = provas.filter(p => p.categoria_id === 6);
+    const outras = provas.filter(p => p.categoria_id === 7);
 
-    // for (let i = 0; i < provas.length; i++) {
-
-    //     for (let j = 0; j < categorias.length; j++) {
-    
-    //         if (provas[i].categoria.id === categorias[j].id ) {
-
-    //         }
-     
-    //     }
-    
-    // }
+   
 
 
   
@@ -45,6 +60,50 @@ export default function Periodo() {
         <>
         <Header />
         <ContainerBox>
+
+            {(sub)
+            ? (sub.map((p) => { 
+                <li>{p.nome}</li> }))
+            : ''
+
+            }
+
+            
+
+            {/* {(p2)
+                ?
+                :
+            }
+
+            {(sub)
+                ?
+                :
+            }
+
+            {(p3)
+                ?
+                :
+            }
+
+            {(pf)
+                ?
+                :
+            }
+
+            {(segCham)
+                ?
+                :
+            }
+
+            {(outras)
+                ?
+                :
+            }        */}
+
+
+
+
+
             <div className="boxProvas">
                 <h2>P1</h2>
                 <li>2018.1 Prof. Fabinho</li>
