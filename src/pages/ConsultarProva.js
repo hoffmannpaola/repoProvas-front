@@ -4,6 +4,7 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 
 import Header from "../components/Header";
+import { killingBlanks } from '../utils/routeFormatting';
 
 export default function ConsultarProva() {
 
@@ -46,31 +47,7 @@ export default function ConsultarProva() {
    
     }, []);
 
-    function killingBlanks(name) {
-        const formatting = name.split(' ');
-        let formatted = '';
-
-        formatting.forEach(element => {
-            formatted += element;
-        });
-
-        
-        console.log(formatted);
-        return formatted;
-        
-    }
-
-    function removeAccent (text) {       
-        text = text.toLowerCase();                                                         
-        text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
-        text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
-        text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
-        text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
-        text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
-        text = text.replace(new RegExp('[Ç]','gi'), 'c');
-
-        return text;                 
-    }
+    
   
     
     function fromIdToName(choice) {
@@ -83,6 +60,12 @@ export default function ConsultarProva() {
             if (s.id === parseInt(choice)) {
                 setSubject(s.nome);
                 toSearch = killingBlanks(s.nome);
+                history.push({
+                  pathname: `/disciplina/${toSearch}`,
+                  state: s.nome,
+                  id: s.id
+                 
+                })
             } 
         })
         : listTeachers.find((s) => {
@@ -92,34 +75,10 @@ export default function ConsultarProva() {
             } 
 
         })
-        
-        sendChoicesToDatabase(toSearch);
+
     }
 
   
-   
-
-    function sendChoicesToDatabase(toSearch) {
-
-        setButtonEnabled(false);
-
-                
-        toSearch = removeAccent(toSearch);
-
-
-        const request = axios.post(`http://localhost:3000/`, {}, {toSearch});
-    
-        request.then(({data}) => {
-            history.push(`/disciplina/${toSearch}`)
-        });
-
-        request.catch( () => {
-             alert("Não foi possivel realizar esta busca!");
-             setButtonEnabled(true);
-    
-        }); 
-
-    }
 
 
 
