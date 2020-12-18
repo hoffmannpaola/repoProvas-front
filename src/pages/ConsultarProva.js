@@ -50,12 +50,19 @@ export default function ConsultarProva() {
         const formatting = name.split(' ');
         let formatted = '';
 
-        formatting.forEach(element => {
-            formatted += element;
+        formatting.forEach((element, index) => {
+            if(index === 0){
+                formatted += element;
+
+            } else {
+                formatted += '-'+element;
+
+            }
+            
         });
 
         
-        console.log(formatted);
+        
         return formatted;
         
     }
@@ -83,6 +90,11 @@ export default function ConsultarProva() {
             if (s.id === parseInt(choice)) {
                 setSubject(s.nome);
                 toSearch = killingBlanks(s.nome);
+                history.push({
+                  pathname: `/disciplina/${toSearch}`,
+                  state: s.nome,
+                 
+                })
             } 
         })
         : listTeachers.find((s) => {
@@ -92,34 +104,10 @@ export default function ConsultarProva() {
             } 
 
         })
-        
-        sendChoicesToDatabase(toSearch);
+
     }
 
   
-   
-
-    function sendChoicesToDatabase(toSearch) {
-
-        setButtonEnabled(false);
-
-                
-        toSearch = removeAccent(toSearch);
-
-
-        const request = axios.post(`http://localhost:3000/`, {}, {toSearch});
-    
-        request.then(({data}) => {
-            history.push(`/disciplina/${toSearch}`)
-        });
-
-        request.catch( () => {
-             alert("Não foi possivel realizar esta busca!");
-             setButtonEnabled(true);
-    
-        }); 
-
-    }
 
 
 
