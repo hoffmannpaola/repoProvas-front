@@ -19,7 +19,7 @@ export default function ConsultarProva() {
     const [ teacher, setTeacher ] = useState('');
 
     useEffect(() => {
-        const request = axios.get(`${process.env.REACT_APP_BACKURL}/api/disciplinas/get-subjects`);
+        const request = axios.get(`http://localhost:3000/api/disciplinas/get-subjects`);
     
         request.then(({data}) => {
             setListSubjects(data);
@@ -33,7 +33,7 @@ export default function ConsultarProva() {
     }, []);
 
     useEffect(() => {
-        const request = axios.get(`${process.env.REACT_APP_BACKURL}/api/professores/get-teacher`);
+        const request = axios.get(`http://localhost:3000/api/professores/get-teacher`);
     
         request.then(({data}) => {
             setListTeachers(data); 
@@ -47,6 +47,9 @@ export default function ConsultarProva() {
    
     }, []);
 
+    
+  
+    
     function fromIdToName(choice) {
 
         let toSearch;
