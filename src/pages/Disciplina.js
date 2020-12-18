@@ -4,10 +4,15 @@ import { useHistory, useLocation  } from "react-router-dom";
 import styled from "styled-components";
 
 import Header from "../components/Header";
+import { killingBlanks } from '../utils/routeFormatting';
 
 
 export default function Disciplina(props) {
     const subject = props.location.state;
+    const {id} = useParams();
+    console.log(id)
+
+    const history = useHistory();
 
     const periodos = [
         {id: 1, nome: "1º Semestre"},
@@ -33,23 +38,26 @@ export default function Disciplina(props) {
         
 
     }
-
-
-       
     
-    
-        // const request = axios.post(`http://localhost:3000/`, {}, {subject});
-    
-        // request.then(({data}) => {
-        //     history.push(`/lalala/${toSearch}`)
-        // });
+    function changePage(item) {
+        const newItem = killingBlanks(item)
 
-        // request.catch( () => {
-        //      alert("Não foi possivel realizar esta busca!");
-        //      setButtonEnabled(true);
-    
-        // }); 
+        history.push(`/periodo/${newItem}`)
 
+    }
+    
+    // const request = axios.post(`http://localhost:3000/`, {}, {subject});
+
+    // request.then(({data}) => {
+        
+    // });
+
+    // request.catch( () => {
+    //         alert("Não foi possivel realizar esta busca!");
+    //         setButtonEnabled(true);
+
+    // }); 
+    
 
     return (
         <>
@@ -58,13 +66,14 @@ export default function Disciplina(props) {
             <h1>{subject}</h1>
             
             {listPeriodos.map((item) => (
-                            <div 
-                            className="periodo" 
-                            key={item} 
-                            value={item}>
-                            {item}
-                            </div>
-                        ))}
+                <div
+                    onClick={ changePage(item) }
+                    className="periodo" 
+                    key={item} 
+                    value={item}>
+                    {item}
+                </div>
+            ))}
 
             
         </ContainerBox>

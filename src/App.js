@@ -7,6 +7,7 @@ import ConsultarProva from "./pages/ConsultarProva";
 import UploadProva from "./pages/UploadProva";
 import Disciplina from "./pages/Disciplina";
 import Professor from "./pages/Professor";
+import Periodo from "./pages/Periodo";
 
 
 
@@ -16,6 +17,7 @@ export default function App() {
       <GlobalStyle />
       <Router>
         <Switch>
+          <Route path="/periodo/:id" exact component={Periodo} />
           <Route path="/professor/:id" exact component={Professor} />
           <Route path="/disciplina/:id" exact component={Disciplina} />
           <Route path="/postar" exact component={UploadProva} />

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 
 import Header from "../components/Header";
+import { killingBlanks } from '../utils/routeFormatting';
 
 export default function ConsultarProva() {
 
@@ -46,38 +47,7 @@ export default function ConsultarProva() {
    
     }, []);
 
-    function killingBlanks(name) {
-        const formatting = name.split(' ');
-        let formatted = '';
-
-        formatting.forEach((element, index) => {
-            if(index === 0){
-                formatted += element;
-
-            } else {
-                formatted += '-'+element;
-
-            }
-            
-        });
-
-        
-        
-        return formatted;
-        
-    }
-
-    function removeAccent (text) {       
-        text = text.toLowerCase();                                                         
-        text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
-        text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
-        text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
-        text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
-        text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
-        text = text.replace(new RegExp('[Ç]','gi'), 'c');
-
-        return text;                 
-    }
+    
   
     
     function fromIdToName(choice) {
